@@ -33,7 +33,7 @@ func (h commandHandler) CreateCommand(ctx context.Context, req *commandv1.Create
 		Inputs: inputs,
 	})
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "create command: %v", err)
+		return nil, fmt.Errorf("create command: %w", err)
 	}
 	return &commandv1.CreateCommandResponse{
 		Command: h.convertCommandToResponse(cmd),
@@ -45,7 +45,7 @@ func (h commandHandler) GetCommand(ctx context.Context, req *commandv1.GetComman
 		CommandID: req.Id,
 	})
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "get command: %v", err)
+		return nil, fmt.Errorf("get command: %w", err)
 	}
 	return &commandv1.GetCommandResponse{
 		Command: h.convertCommandToResponse(cmd),
