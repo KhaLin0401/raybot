@@ -16,7 +16,9 @@ import (
 	"github.com/tbe-team/raybot/internal/config"
 	"github.com/tbe-team/raybot/internal/events"
 	commandv1 "github.com/tbe-team/raybot/internal/handlers/cloud/gen/command/v1"
+	sessionv1 "github.com/tbe-team/raybot/internal/handlers/cloud/gen/session/v1"
 	"github.com/tbe-team/raybot/internal/handlers/cloud/interceptor"
+	"github.com/tbe-team/raybot/internal/services/cloudsession"
 	"github.com/tbe-team/raybot/internal/services/command"
 	"github.com/tbe-team/raybot/pkg/eventbus"
 )
@@ -28,6 +30,7 @@ type Service struct {
 
 	publisher      eventbus.Publisher
 	commandService command.Service
+	sessionService cloudsession.Service
 
 	closing atomic.Bool
 }
@@ -55,6 +58,7 @@ func New(
 	log *slog.Logger,
 	publisher eventbus.Publisher,
 	commandService command.Service,
+	sessionService cloudsession.Service,
 	optFuncs ...OptionFunc,
 ) *Service {
 	opts := defaultOptions
@@ -68,6 +72,7 @@ func New(
 		log:            log.With("service", "cloud"),
 		publisher:      publisher,
 		commandService: commandService,
+		sessionService: sessionService,
 	}
 }
 
@@ -179,4 +184,7 @@ func (s *Service) wrapInterceptors(srv *grpctunnel.ReverseTunnelServer) grpc.Ser
 func (s *Service) registerHandlers(sr grpc.ServiceRegistrar) {
 	commandHandler := newCommandHandler(s.commandService)
 	commandv1.RegisterCommandServiceServer(sr, commandHandler)
+
+	sessionHandler := newSessionHandler(s.sessionService)
+	sessionv1.RegisterSessionServiceServer(sr, sessionHandler)
 }

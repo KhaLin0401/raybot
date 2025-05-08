@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package session.v1;
+
+import "google/protobuf/duration.proto";
+
+option go_package = "github.com/tbe-team/raybot/proto/session/v1;sessionv1";
+
+service SessionService {
+  rpc StartSession(StartSessionRequest) returns (StartSessionResponse) {}
+  rpc SendSessionHeartbeat(SendSessionHeartbeatRequest) returns (SendSessionHeartbeatResponse) {}
+}
+
+message StartSessionRequest {}
+
+message StartSessionResponse {
+  string session_id = 1;
+  google.protobuf.Duration heartbeat_interval = 2;
+}
+
+message SendSessionHeartbeatRequest {
+  string session_id = 1;
+}
+
+message SendSessionHeartbeatResponse {}

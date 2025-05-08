@@ -18,6 +18,8 @@ import (
 	"github.com/tbe-team/raybot/internal/services/battery/batteryimpl"
 	"github.com/tbe-team/raybot/internal/services/cargo"
 	"github.com/tbe-team/raybot/internal/services/cargo/cargoimpl"
+	"github.com/tbe-team/raybot/internal/services/cloudsession"
+	"github.com/tbe-team/raybot/internal/services/cloudsession/cloudsessionimpl"
 	"github.com/tbe-team/raybot/internal/services/command"
 	"github.com/tbe-team/raybot/internal/services/command/commandimpl"
 	"github.com/tbe-team/raybot/internal/services/command/executor"
@@ -69,6 +71,7 @@ type Application struct {
 	PeripheralService     peripheral.Service
 	CommandService        command.Service
 	ApperrorcodeService   apperrorcode.Service
+	CloudSessionService   cloudsession.Service
 }
 
 type CleanupFunc func() error
@@ -119,6 +122,7 @@ func New(configFilePath, dbPath string) (*Application, CleanupFunc, error) {
 	distanceSensorStateRepository := distancesensorimpl.NewDistanceSensorStateRepository()
 	appStateRepository := appstateimpl.NewAppStateRepository()
 	commandRepository := commandimpl.NewCommandRepository(db, queries)
+	cloudSessionRepository := cloudsessionimpl.NewRepository()
 
 	// Initialize hardware components
 	espSerialClient := espserial.NewClient(cfg.Hardware.ESP.Serial)
@@ -217,7 +221,7 @@ func New(configFilePath, dbPath string) (*Application, CleanupFunc, error) {
 	}
 
 	apperrorcodeService := apperrorcodeimpl.NewService()
-
+	cloudSessionService := cloudsessionimpl.NewService(cloudSessionRepository)
 	cleanup := func() error {
 		var err error
 		if espSerialClient.Connected() {
@@ -263,5 +267,6 @@ func New(configFilePath, dbPath string) (*Application, CleanupFunc, error) {
 		PeripheralService:     peripheralService,
 		CommandService:        commandService,
 		ApperrorcodeService:   apperrorcodeService,
+		CloudSessionService:   cloudSessionService,
 	}, cleanup, nil
 }

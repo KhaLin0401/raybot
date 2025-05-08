@@ -14,6 +14,8 @@ import (
 	"github.com/tbe-team/raybot/internal/handlers/cloud"
 	"github.com/tbe-team/raybot/internal/logging"
 	"github.com/tbe-team/raybot/internal/services/appstate/appstateimpl"
+	"github.com/tbe-team/raybot/internal/services/cloudsession"
+	"github.com/tbe-team/raybot/internal/services/cloudsession/cloudsessionimpl"
 	"github.com/tbe-team/raybot/internal/services/command"
 	"github.com/tbe-team/raybot/internal/services/command/commandimpl"
 	"github.com/tbe-team/raybot/internal/services/command/executor"
@@ -27,6 +29,7 @@ type TunnelTestEnv struct {
 	TunnelChannel grpctunnel.TunnelChannel
 
 	CommandService command.Service
+	CloudSession   cloudsession.Service
 }
 
 // SetupTunnelTestEnv sets up a temporary cloud server with gRPC reverse tunnel,
@@ -71,7 +74,7 @@ func SetupTunnelTestEnv(t *testing.T) TunnelTestEnv {
 		appstateimpl.NewAppStateRepository(),
 		executor.NewNoopRouter(),
 	)
-
+	cloudSessionService := cloudsessionimpl.NewService(cloudsessionimpl.NewRepository())
 	cloudSvc := cloud.New(
 		config.Cloud{
 			Address: fmt.Sprintf("localhost:%d", port),
@@ -79,6 +82,7 @@ func SetupTunnelTestEnv(t *testing.T) TunnelTestEnv {
 		log,
 		bus,
 		commandService,
+		cloudSessionService,
 		cloud.WithConnectTimeout(500*time.Millisecond),
 	)
 	cleanupCloudSvc, err := cloudSvc.Run(context.Background())
@@ -94,7 +98,8 @@ func SetupTunnelTestEnv(t *testing.T) TunnelTestEnv {
 	})
 
 	return TunnelTestEnv{
-		CommandService: commandService,
 		TunnelChannel:  tc,
+		CommandService: commandService,
+		CloudSession:   cloudSessionService,
 	}
 }

@@ -15,3 +15,7 @@ packages:
     interfaces:
       Repository:
       Service:
+  github.com/tbe-team/raybot/internal/services/cloudsession:
+    config:
+    interfaces:
+      Service:
