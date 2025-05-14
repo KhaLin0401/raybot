@@ -74,11 +74,12 @@ Ví dụ:
 | Tham số         | Kiểu dữ liệu | Mô tả                                          |
 |-----------------|--------------|------------------------------------------------|
 | target_position | uint16       | Vị trí đích của động cơ nâng hạ                |
+| max_output      | uint16       | Giới hạn tốc độ động cơ nâng hạ (0-100)        |
 | enable          | uint8        | Cho phép động cơ nâng hạ chạy (0: tắt, 1: bật) |
 
 Ví dụ:
 ```json
->{"id":"abc","type":2,"data":{"target_position":123,"enable":1}}\r\n
+>{"id":"abc","type":2,"data":{"target_position":123,"max_output":80,"enable":1}}\r\n
 ```
 
 ### 2.4. Cấu hình động cơ di chuyển (cmd_type = 3)
