@@ -148,6 +148,17 @@ Ví dụ phản hồi:
 >{"type":0,"state_type":6,"data":{"state":0}}\r\n
 ```
 
+### 2.8 Trạng thái vật thể trong hộp
+
+| Trường | Kiểu dữ liệu | Khóa JSON | Mô tả |
+|-------|-----------|----------|-------------|
+| State | uint8 | object | Trạng thái vật thể trong hộp (0=false/1=true) |
+
+Ví dụ phản hồi:
+```
+>{"type":0,"state_type":7,"data":{"object":0}}\r\n
+```
+
 ## 3. Phản hồi ACK
 
 PIC gửi phản hồi ACK đến ứng dụng khi nhận được lệnh.
