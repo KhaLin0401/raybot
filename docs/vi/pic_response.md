@@ -50,6 +50,7 @@ Cấu trúc JSON:
 | 4    | uint8         | Trạng thái động cơ nâng              |
 | 5    | uint8         | Trạng thái động cơ di chuyển         |
 | 6    | uint8         | Trạng thái công tắc hành trình 1     |
+| 7    | uint8         | Trạng thái có vật thể trong hộp    |
 
 ### data
 
@@ -152,7 +153,7 @@ Ví dụ phản hồi:
 
 | Trường | Kiểu dữ liệu | Khóa JSON | Mô tả |
 |-------|-----------|----------|-------------|
-| State | uint8 | object | Trạng thái vật thể trong hộp (0=false/1=true) |
+| Object | uint8 | object | Trạng thái có vật thể trong hộp (0=false/1=true) |
 
 Ví dụ phản hồi:
 ```
